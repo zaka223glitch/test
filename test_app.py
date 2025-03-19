@@ -5,5 +5,5 @@ class TestApp(unittest.Testcase):
     self.assertEqual(add(2,3),5)
     self.assertEqual(add(-1,1),0)
 
-if_name_== "_main_":
+if _name_ == "_main_":
 unittest.main()
