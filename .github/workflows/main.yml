@@ -1,0 +1,42 @@
+name: CI/CD Pipeline
+ 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Voor handmatige triggers
+ 
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Haal de code op
+        uses: actions/checkout@v3
+ 
+      - name: 🐍 Installeer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+ 
+      - name: 📦 Controleer Python-versie
+        run: python --version
+      - name: 🧪 Voer tests uit
+        run: python -m unittest test_app.py
+ 
+  deploy:
+    needs: test  # Draait alleen als tests slagen
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Haal de code op
+        uses: actions/checkout@v3
+ 
+      - name: 🚀 Maak een nieuwe release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          files: app.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
